@@ -36,4 +36,4 @@ ENV PATH $ESP_TCHAIN_BASEDIR/xtensa-esp32-elf/bin:$ESP_TCHAIN_BASEDIR/esp32ulp-e
 # This is the directory where our project will show up
 RUN mkdir -p /esp/project
 WORKDIR /esp/project
-ENTRYPOINT ["/bin/bash"]
+ENTRYPOINT ["/bin/bash", "-l", "-c"]
