@@ -2,7 +2,8 @@ FROM ubuntu:16.04
 
 # Install build dependencies (and vim + picocom for editing/debugging)
 RUN apt-get -qq update \
-    && apt-get install -y gcc git wget make libncurses-dev flex bison gperf python python-serial \
+    && apt-get install -y gcc git wget make libncurses-dev flex bison gperf \
+			  python python-serial python-pip \
                           cmake ninja-build \
                           ccache \
                           vim picocom \
@@ -28,7 +29,11 @@ RUN mkdir -p $ESP_TCHAIN_BASEDIR \
 
 # Setup IDF_PATH
 ENV IDF_PATH /esp/esp-idf
-RUN mkdir -p $IDF_PATH
+RUN mkdir -p /esp \
+    && git clone -b v3.2 --recursive https://github.com/espressif/esp-idf.git $IDF_PATH \
+    && cd $IDF_PATH \
+    && git submodule update --init --recursive \
+    && python -m pip install -r $IDF_PATH/requirements.txt
 
 # Add the toolchain binaries to PATH
 ENV PATH $ESP_TCHAIN_BASEDIR/xtensa-esp32-elf/bin:$ESP_TCHAIN_BASEDIR/esp32ulp-elf-binutils/bin:$IDF_PATH/tools:$PATH
