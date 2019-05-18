@@ -28,7 +28,11 @@ RUN mkdir -p $ESP_TCHAIN_BASEDIR \
 
 # Setup IDF_PATH
 ENV IDF_PATH /esp/esp-idf
-RUN mkdir -p $IDF_PATH
+RUN mkdir -p /esp
+    && git clone -b v3.2 --recursive https://github.com/espressif/esp-idf.git $IDF_PATH
+    && cd $IDF_PATH
+    && git submodule update --init --recursive
+    && make -j4 all
 
 # Add the toolchain binaries to PATH
 ENV PATH $ESP_TCHAIN_BASEDIR/xtensa-esp32-elf/bin:$ESP_TCHAIN_BASEDIR/esp32ulp-elf-binutils/bin:$IDF_PATH/tools:$PATH
